@@ -1,152 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>Test with Everything in One File</title>
-    <style>
-        /* Embedded CSS */
-        p {
-            margin: 0;
-        }
-
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
-
-        .overlay, .scare {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            width: 100vw;
-        }
-
-        p.overlay-title {
-            font-size: 24px;
-            font-weight: 900;
-            color: black;
-            line-height: 1;
-            margin-bottom: 16px;
-        }
-
-        .overlay-button {
-            display: inline-flex;
-            align-items: center;
-            height: 40px;
-            padding-right: 24px;
-            padding-left: 24px;
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 1;
-            border-radius: 4px;
-            margin: 4px;
-            cursor: pointer;
-        }
-
-        #accept-button {
-            background-color: rgb(132, 94, 194);
-            color: white;
-        }
-
-        #decline-button {
-            color: rgb(132, 94, 194);
-            border: 2px solid rgb(132, 94, 194);
-        }
-
-        .overlay-body {
-            max-width: 512px;
-            text-align: center;
-            font-family: "Inter", sans-serif;
-        }
-
-        .overlay[hidden] {
-            display: none;
-        }
-
-        .overlay {
-            z-index: 2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f5f6fa;
-            padding-right: 24px;
-            padding-left: 24px;
-        }
-
-        .scare {
-            z-index: 1;
-        }
-
-        video#video {
-            height: 100%;
-            width: 100%;
-            object-fit: cover;
-        }
-
-        video#video::-webkit-media-controls-enclosure {
-            display:none !important;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generate Code</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      height: 100%;
+      overflow: hidden;
+    }
+    #startButton {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px 40px;
+      font-size: 20px;
+      background-color: #8c52ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 10;
+    }
+    #jumpscare {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+  </style>
 </head>
 <body>
 
-<!-- The overlay with the button -->
-<div id="overlay" class="overlay">
-    <div class="overlay-body">
-        <p class="overlay-title">Click to Generate Code</p>
-        <div class="overlay-buttons-wrapper">
-            <div id="accept-button" class="overlay-button">Generate Code</div>
-            <div id="decline-button" class="overlay-button">Decline</div>
-        </div>
-    </div>
-</div>
+  <button id="startButton">Generate Code</button>
+  <video id="jumpscare" src="video.mp4" autoplay loop></video>
 
-<!-- The video -->
-<div class="scare">
-    <video id="video" class="video" loop>
-        <!-- Embed the video directly as base64 data (replace this with your own base64 string) -->
-        <source src="data:video/mp4;base64,AAABAAEAA...<your video base64 here>" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-</div>
+  <script>
+    const button = document.getElementById('startButton');
+    const video = document.getElementById('jumpscare');
 
-<script>
-    // JavaScript to play the video when the button is pressed
-    const video = document.getElementById("video");
-    const overlay = document.getElementById("overlay");
-    const declineButton = document.getElementById("decline-button");
-    const acceptButton = document.getElementById("accept-button");
+    button.addEventListener('click', () => {
+      button.style.display = 'none';
+      video.style.display = 'block';
+      video.play();
+      requestFullscreen(document.documentElement);
+    });
 
-    let hasClicked;
-
-    window.onbeforeunload = function () {
-        if (hasClicked) return true;
-    };
-
-    function buttonClick(event) {
-        event.preventDefault();
-        if (!hasClicked) hasClicked = true;
-        
-        // Hide the overlay when the button is clicked
-        overlay.style.display = "none";  // This will hide the entire overlay
-        video.play();
-        videoClick();
+    function requestFullscreen(elem) {
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+      }
     }
-
-    function videoClick(event) {
-        if (event) event.preventDefault();
-        const { documentElement } = document;
-        if (documentElement.requestFullscreen) documentElement.requestFullscreen();
-        else if (documentElement.mozRequestFullScreen) documentElement.mozRequestFullScreen();
-        else if (documentElement.webkitRequestFullscreen) documentElement.webkitRequestFullscreen();
-        else if (documentElement.msRequestFullscreen) documentElement.msRequestFullscreen();
-    }
-
-    acceptButton.addEventListener("click", buttonClick);
-    declineButton.addEventListener("click", buttonClick);
-    video.addEventListener("click", videoClick);
-</script>
+  </script>
 
 </body>
 </html>
